@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>miPaint_de.qm</file>
+        <file>miPaint_en.qm</file>
+        <file>miPaint_fr.qm</file>
+        <file>miPaint_it.qm</file>
+        <file>paint-591564_1920.png</file>
+    </qresource>
+</RCC>
