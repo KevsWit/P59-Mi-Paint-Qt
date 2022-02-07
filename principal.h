@@ -11,6 +11,7 @@
 #include <QColorDialog>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <math.h>
 
 #define DEFAULT_ANCHO 3
 

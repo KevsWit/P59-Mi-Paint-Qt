@@ -18,6 +18,7 @@ Principal::Principal(QWidget *parent)
     mColor = Qt::black;
     mAncho = DEFAULT_ANCHO;
     mNumLineas = 0;
+    this->mPuedeDibujar = false;
 }
 
 Principal::~Principal()
@@ -51,21 +52,23 @@ void Principal::mouseMoveEvent(QMouseEvent *event)
         event->accept();
         return;
     }
-    // Capturar el punto donde se mueve el mouse
-    mFinal = event->pos();
-    // Crear un pincel y establecer atributos
-    QPen pincel;
-    pincel.setColor(mColor);
-    pincel.setWidth(mAncho);
-    // Dibujar una linea
-    mPainter->setPen(pincel);
-    mPainter->drawLine(mInicial, mFinal);
-    // Mostrar el número de líneas en la barra de estado
-    ui->statusbar->showMessage("Número de líneas: " + QString::number(++mNumLineas));
-    // Actualizar la interfaz
-    update();
-    // actualizar el punto inicial
-    mInicial = mFinal;
+    if (ui->actionLibre->isChecked()){
+        // Capturar el punto donde se mueve el mouse
+        mFinal = event->pos();
+        // Crear un pincel y establecer atributos
+        QPen pincel;
+        pincel.setColor(mColor);
+        pincel.setWidth(mAncho);
+        // Dibujar una linea
+        mPainter->setPen(pincel);
+        mPainter->drawLine(mInicial, mFinal);
+        // Mostrar el número de líneas en la barra de estado
+        ui->statusbar->showMessage("Número de líneas: " + QString::number(++mNumLineas));
+        // Actualizar la interfaz
+        update();
+        // actualizar el punto inicial
+        mInicial = mFinal;
+    }
 }
 
 void Principal::mouseReleaseEvent(QMouseEvent *event)
@@ -73,7 +76,85 @@ void Principal::mouseReleaseEvent(QMouseEvent *event)
     mPuedeDibujar = false;
     // Aceptar el vento
     event->accept();
+    if (ui->actionLineas->isChecked()){
+        if (ui->actionLibre->isChecked()){
+            ui->actionLibre->setChecked(false);
+        }
+        if (ui->actionRectangles->isChecked()){
+            ui->actionRectangles->setChecked(false);
+        }
+        if (ui->actionCircunferencias->isChecked()){
+            ui->actionCircunferencias->setChecked(false);
+        }
+        // Capturar el punto donde se mueve el mouse
+        mFinal = event->pos();
 
+        // Crear un pincel y establecer atributos
+        QPen pincel;
+        pincel.setColor(mColor);
+        pincel.setWidth(mAncho);
+        // Dibujar una linea
+        mPainter->setPen(pincel);
+        mPainter->drawLine(mInicial, mFinal);
+        // Mostrar el número de líneas en la barra de estado
+        ui->statusbar->showMessage("Número de líneas: " + QString::number(++mNumLineas));
+        // Actualizar la interfaz
+        update();
+    }
+    if (ui->actionRectangles->isChecked()){
+        if (ui->actionLibre->isChecked()){
+            ui->actionLibre->setChecked(false);
+        }
+        if (ui->actionLineas->isChecked()){
+            ui->actionLineas->setChecked(false);
+        }
+        if (ui->actionCircunferencias->isChecked()){
+            ui->actionCircunferencias->setChecked(false);
+        }
+        // Capturar el punto donde se mueve el mouse
+        mFinal = event->pos();
+
+        // Crear un pincel y establecer atributos
+        QPen pincel;
+        pincel.setColor(mColor);
+        pincel.setWidth(mAncho);
+        // Dibujar una linea
+        mPainter->setPen(pincel);
+        int x2 = mInicial.x() - mFinal.x();
+        int y2 = mInicial.y() - mFinal.y();
+
+        mPainter->drawRect(mInicial.x(), mInicial.y(), -x2, -y2);
+        // Mostrar el número de líneas en la barra de estado
+        ui->statusbar->showMessage("Número de líneas: " + QString::number(mNumLineas += 4));
+        // Actualizar la interfaz
+        update();
+    }
+    if (ui->actionCircunferencias->isChecked()){
+        if (ui->actionLibre->isChecked()){
+            ui->actionLibre->setChecked(false);
+        }
+        if (ui->actionLineas->isChecked()){
+            ui->actionLineas->setChecked(false);
+        }
+        if (ui->actionRectangles->isChecked()){
+            ui->actionRectangles->setChecked(false);
+        }
+        // Capturar el punto donde se mueve el mouse
+        mFinal = event->pos();
+
+        // Crear un pincel y establecer atributos
+        QPen pincel;
+        pincel.setColor(mColor);
+        pincel.setWidth(mAncho);
+        // Dibujar una linea
+        mPainter->setPen(pincel);
+        float r = sqrt(pow((mFinal.x()-mInicial.x()),2)+pow((mFinal.y()-mInicial.y()),2));
+        mPainter->drawEllipse(mInicial.x()-r, mInicial.y()-r, r*2, r*2);
+        // Mostrar el número de líneas en la barra de estado
+        ui->statusbar->showMessage("Número de líneas: " + QString::number(++mNumLineas));
+        // Actualizar la interfaz
+        update();
+    }
 }
 
 
@@ -122,3 +203,4 @@ void Principal::on_actionGuardar_triggered()
                                  "No se pudo almacenar la imagen.");
     }
 }
+
