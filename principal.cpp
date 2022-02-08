@@ -63,7 +63,7 @@ void Principal::mouseMoveEvent(QMouseEvent *event)
         mPainter->setPen(pincel);
         mPainter->drawLine(mInicial, mFinal);
         // Mostrar el número de líneas en la barra de estado
-        ui->statusbar->showMessage("Número de líneas: " + QString::number(++mNumLineas));
+        ui->statusbar->showMessage(tr("Número de líneas: ") + QString::number(++mNumLineas));
         // Actualizar la interfaz
         update();
         // actualizar el punto inicial
@@ -77,15 +77,6 @@ void Principal::mouseReleaseEvent(QMouseEvent *event)
     // Aceptar el vento
     event->accept();
     if (ui->actionLineas->isChecked()){
-        if (ui->actionLibre->isChecked()){
-            ui->actionLibre->setChecked(false);
-        }
-        if (ui->actionRectangles->isChecked()){
-            ui->actionRectangles->setChecked(false);
-        }
-        if (ui->actionCircunferencias->isChecked()){
-            ui->actionCircunferencias->setChecked(false);
-        }
         // Capturar el punto donde se mueve el mouse
         mFinal = event->pos();
 
@@ -97,20 +88,11 @@ void Principal::mouseReleaseEvent(QMouseEvent *event)
         mPainter->setPen(pincel);
         mPainter->drawLine(mInicial, mFinal);
         // Mostrar el número de líneas en la barra de estado
-        ui->statusbar->showMessage("Número de líneas: " + QString::number(++mNumLineas));
+        ui->statusbar->showMessage(tr("Número de líneas: ") + QString::number(++mNumLineas));
         // Actualizar la interfaz
         update();
     }
     if (ui->actionRectangles->isChecked()){
-        if (ui->actionLibre->isChecked()){
-            ui->actionLibre->setChecked(false);
-        }
-        if (ui->actionLineas->isChecked()){
-            ui->actionLineas->setChecked(false);
-        }
-        if (ui->actionCircunferencias->isChecked()){
-            ui->actionCircunferencias->setChecked(false);
-        }
         // Capturar el punto donde se mueve el mouse
         mFinal = event->pos();
 
@@ -118,27 +100,18 @@ void Principal::mouseReleaseEvent(QMouseEvent *event)
         QPen pincel;
         pincel.setColor(mColor);
         pincel.setWidth(mAncho);
-        // Dibujar una linea
+        // Dibujar un rectángulo
         mPainter->setPen(pincel);
         int x2 = mInicial.x() - mFinal.x();
         int y2 = mInicial.y() - mFinal.y();
 
         mPainter->drawRect(mInicial.x(), mInicial.y(), -x2, -y2);
         // Mostrar el número de líneas en la barra de estado
-        ui->statusbar->showMessage("Número de líneas: " + QString::number(mNumLineas += 4));
+        ui->statusbar->showMessage(tr("Número de líneas: ") + QString::number(mNumLineas += 4));
         // Actualizar la interfaz
         update();
     }
     if (ui->actionCircunferencias->isChecked()){
-        if (ui->actionLibre->isChecked()){
-            ui->actionLibre->setChecked(false);
-        }
-        if (ui->actionLineas->isChecked()){
-            ui->actionLineas->setChecked(false);
-        }
-        if (ui->actionRectangles->isChecked()){
-            ui->actionRectangles->setChecked(false);
-        }
         // Capturar el punto donde se mueve el mouse
         mFinal = event->pos();
 
@@ -146,12 +119,12 @@ void Principal::mouseReleaseEvent(QMouseEvent *event)
         QPen pincel;
         pincel.setColor(mColor);
         pincel.setWidth(mAncho);
-        // Dibujar una linea
+        // Dibujar una circunferencia
         mPainter->setPen(pincel);
         float r = sqrt(pow((mFinal.x()-mInicial.x()),2)+pow((mFinal.y()-mInicial.y()),2));
         mPainter->drawEllipse(mInicial.x()-r, mInicial.y()-r, r*2, r*2);
         // Mostrar el número de líneas en la barra de estado
-        ui->statusbar->showMessage("Número de líneas: " + QString::number(++mNumLineas));
+        ui->statusbar->showMessage(tr("Número de líneas: ") + QString::number(++mNumLineas));
         // Actualizar la interfaz
         update();
     }
@@ -161,8 +134,8 @@ void Principal::mouseReleaseEvent(QMouseEvent *event)
 void Principal::on_actionAncho_triggered()
 {
     mAncho = QInputDialog::getInt(this,
-                                  "Ancho del pincel",
-                                  "Ingrese el ancho del pincel de dibujo",
+                                  tr("Ancho del pincel"),
+                                  tr("Ingrese el ancho del pincel de dibujo"),
                                   mAncho,
                                   1, 100);
 }
@@ -176,7 +149,7 @@ void Principal::on_actionColor_triggered()
 {
     mColor = QColorDialog::getColor(mColor,
                                     this,
-                                    "Color del pincel");
+                                    tr("Color del pincel"));
 }
 
 void Principal::on_actionNuevo_triggered()
@@ -189,18 +162,74 @@ void Principal::on_actionNuevo_triggered()
 void Principal::on_actionGuardar_triggered()
 {
     QString nombreArchivo = QFileDialog::getSaveFileName(this,
-                                                         "Guardar imagen",
+                                                         tr("Guardar imagen"),
                                                          QString(),
                                                          "Imágenes (*.png)");
     if ( !nombreArchivo.isEmpty() ){
         if (mImagen->save(nombreArchivo))
             QMessageBox::information(this,
-                                     "Guardar imagen",
-                                     "Archivo almacenado en: " + nombreArchivo);
+                                     tr("Guardar imagen"),
+                                     tr("Archivo almacenado en: ") + nombreArchivo);
         else
             QMessageBox::warning(this,
-                                 "Guardar imagen",
-                                 "No se pudo almacenar la imagen.");
+                                 tr("Guardar imagen"),
+                                 tr("No se pudo almacenar la imagen."));
+    }
+}
+
+
+void Principal::on_actionLineas_triggered()
+{
+    if (ui->actionLibre->isChecked()){
+        ui->actionLibre->setChecked(false);
+    }
+    if (ui->actionRectangles->isChecked()){
+        ui->actionRectangles->setChecked(false);
+    }
+    if (ui->actionCircunferencias->isChecked()){
+        ui->actionCircunferencias->setChecked(false);
+    }
+}
+
+
+void Principal::on_actionLibre_triggered()
+{
+    if (ui->actionCircunferencias->isChecked()){
+        ui->actionCircunferencias->setChecked(false);
+    }
+    if (ui->actionLineas->isChecked()){
+        ui->actionLineas->setChecked(false);
+    }
+    if (ui->actionRectangles->isChecked()){
+        ui->actionRectangles->setChecked(false);
+    }
+}
+
+
+void Principal::on_actionRectangles_triggered()
+{
+    if (ui->actionLibre->isChecked()){
+        ui->actionLibre->setChecked(false);
+    }
+    if (ui->actionLineas->isChecked()){
+        ui->actionLineas->setChecked(false);
+    }
+    if (ui->actionCircunferencias->isChecked()){
+        ui->actionCircunferencias->setChecked(false);
+    }
+}
+
+
+void Principal::on_actionCircunferencias_triggered()
+{
+    if (ui->actionLibre->isChecked()){
+        ui->actionLibre->setChecked(false);
+    }
+    if (ui->actionLineas->isChecked()){
+        ui->actionLineas->setChecked(false);
+    }
+    if (ui->actionRectangles->isChecked()){
+        ui->actionRectangles->setChecked(false);
     }
 }
 
